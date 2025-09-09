@@ -1,0 +1,35 @@
+# version: '3.8'
+services:
+  mysql:
+    image: mysql:8.4.5
+    platform: linux/amd64
+    container_name: mysql
+    hostname: ${MYSQL_HOST}
+    # command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - 3307:${MYSQL_PORT}
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_USER=${MYSQL_ROOT_USER}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - dockernet
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping']
+      interval: 5s
+      timeout: 2s
+      retries: 3
+
+# if your service is running outside of docker comment out networks section
+networks:
+  dockernet:
+    driver: bridge
+    name: ${DOCKER_NETWORK:-nestjs-oxlint_dockernet}
+
+volumes:
+  db-data:

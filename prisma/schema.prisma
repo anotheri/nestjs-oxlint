@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+
+  // https://github.com/prisma/prisma-client-js/issues/616#issuecomment-616107821
+  binaryTargets = ["native", "darwin", "debian-openssl-3.0.x", "linux-musl", "linux-musl-openssl-3.0.x"]
+}
+
+// generator dbml {
+//   provider = "prisma-dbml-generator"
+// }
+
+// generator prismabox {
+//   provider                    = "prismabox"
+//   output                      = "../src/generated/prismabox"
+//   inputModel                  = true
+//   useJsonTypes                = "transformer"
+//   typeboxImportDependencyName = "@src/common/typebox"
+//   // By default the generated schemes do not allow additional properties.
+//   // You can allow them by setting this to true
+//   // additionalProperties = true
+// }
+
+generator fakeData {
+  provider     = "prisma-generator-fake-data"
+  output       = "../src/generated/fake-data.ts"
+  emptyValueAs = "null"
+}
+
+// test models
+
+model Item {
+  id        Int     @id @default(autoincrement()) /// FAKE: faker.number.int({ min: 0, max: 9999 })
+  title     String  @db.VarChar(255) /// FAKE: faker.lorem.words({ min: 1, max: 5 })
+  content   String? /// FAKE: faker.lorem.sentences({ min: 1, max: 5 })
+  published Boolean @default(false)
+  accountId Int
+  // relation to one Account
+  account   Account @relation(fields: [accountId], references: [id])
+
+  // timestamps
+  createdAt DateTime @default(now()) @map("i_created_at") /// FAKE: faker.date.past()
+  updatedAt DateTime @updatedAt @map("i_updated_at") /// FAKE: faker.date.recent()
+}
+
+model Account {
+  id        Int     @id @default(autoincrement()) /// FAKE: faker.number.int({ min: 0, max: 9999 })
+  avatarUrl String? /// FAKE: faker.image.avatar()
+  // relation to many Item
+  Item      Item[]
+
+  // timestamps
+  createdAt DateTime @default(now()) @map("a_created_at") /// FAKE: faker.date.past()
+  updatedAt DateTime @updatedAt @map("a_updated_at") /// FAKE: faker.date.recent()
+}

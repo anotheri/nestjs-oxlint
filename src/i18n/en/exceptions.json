@@ -1,0 +1,10 @@
+{
+  "NOT_FOUND": "Not Found",
+  "BAD_REQUEST": "Bad Request",
+  "BAD_REQUEST_INT_PARAM": "Validation failed: '{param}' must be an integer number greater than 0",
+  "BAD_REQUEST_REQUIRED_PARAM": "Validation failed: '{param}' is required",
+
+  "FORBIDDEN": "Forbidden: no permissions",
+  "FORBIDDEN_RESOURCE": "Forbidden: no permissions to {action} resource '{resourceKind}'",
+  "FORBIDDEN_RESOURCE_ID": "Forbidden: no permissions to {action} resource '{resourceKind}' with id: {resourceId}"
+}

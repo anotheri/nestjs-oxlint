@@ -1,0 +1,27 @@
+{
+  "branches": [
+    "main",
+    {
+      "name": "develop",
+      "prerelease": true
+    }
+  ],
+  "tagFormat": "${version}",
+  "plugins": [
+    ["@semantic-release/commit-analyzer", { "preset": "conventionalcommits" }],
+    [
+      "@semantic-release/release-notes-generator",
+      { "preset": "conventionalcommits" }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "generateNotesCmd": "echo NEXT_VERSION=${nextRelease.version} >> $GITHUB_OUTPUT",
+        "successCmd": "RELEASE_NOTES_LOCAL=$(cat << 'EOF'\n${nextRelease.notes}\nEOF\n); echo \"RELEASE_NOTES<<EOF\" >> $GITHUB_OUTPUT; echo \"$RELEASE_NOTES_LOCAL\" >> $GITHUB_OUTPUT; echo \"EOF\" >> $GITHUB_OUTPUT;",
+        "shell": "/bin/bash"
+      }
+    ],
+    "@semantic-release/changelog",
+    "@semantic-release/github"
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "*.{js,ts,jsx,tsx}": ["yarn lint:fix", "yarn format:fix"],
+  "*.{json,md,html,css}": ["yarn format:fix"]
+}

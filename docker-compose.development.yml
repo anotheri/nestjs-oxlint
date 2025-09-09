@@ -1,0 +1,27 @@
+# version: '3.8'
+services:
+  app:
+    container_name: nestjs-oxlint-api
+    image: nestjs-oxlint:dev
+    tty: true
+    command: yarn concurrently "yarn:start:dev" "yarn:db:studio" # dev only
+    # command: yarn concurrently "start:debug" "db:studio" # dev only, debug
+    ports:
+      - ${PORT:-3000}:${PORT:-3000} # api
+      # - 9229:9229 # debug
+      # - 5555:5555 # prisma studio
+    volumes: # dev only
+      - ./public:/usr/src/app/public
+      - ./prisma:/usr/src/app/prisma
+      - ./src:/usr/src/app/src
+      - ./tests:/usr/src/app/tests
+      - ./coverage:/usr/src/app/coverage
+    depends_on:
+      mysql:
+        condition: service_healthy
+    env_file:
+      - .env
+    networks:
+      - dockernet
+    # extra_hosts:
+    #   - 'host.docker.internal:host-gateway'
